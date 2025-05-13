@@ -1,0 +1,103 @@
+const axios = require('axios');
+
+import { AxiosResponse } from 'axios';
+
+const BASE_URL = 'http://localhost:8081/api'; // Cambia esto a la URL de tu servicio
+
+interface ApiResponse<T> {
+    success: boolean;
+    message: string;
+    data?: T;
+}
+
+export const registerClientService = async (
+    documento: string, 
+    nombres: string, 
+    email: string, 
+    celular: string
+): Promise<ApiResponse<void>> => {
+    try {
+        console.log("LLEGMOS AQUI", `${BASE_URL}/register`);
+        const response: AxiosResponse<ApiResponse<void>> = await axios.post(`${BASE_URL}/register`, {
+            documento,
+            nombres,
+            email,
+            celular
+        });
+        return response.data;
+    } catch (error: any) {
+        return {
+            success: false,
+            message: error.response?.data?.message || 'Error registering client'
+        };
+    }
+};
+
+export const loadWalletService = async (
+    document: string, 
+    celular: string, 
+    amount: number
+): Promise<ApiResponse<void>> => {
+    try {
+        const response: AxiosResponse<ApiResponse<void>> = await axios.post(`${BASE_URL}/load`, {
+            document,
+            celular,
+            amount
+        });
+        return response.data;
+    } catch (error: any) {
+        return {
+            success: false,
+            message: error.response?.data?.message || 'Error loading wallet'
+        };
+    }
+};
+
+export const makePaymentService = async (
+    document: string, 
+    celular: string, 
+    amount: number
+): Promise<ApiResponse<{ sessionId: string }>> => {
+    try {
+        const response: AxiosResponse<ApiResponse<{ sessionId: string }>> = await axios.post(`${BASE_URL}/pay`, {
+            document,
+            celular,
+            amount
+        });
+        return response.data;
+    } catch (error: any) {
+        return {
+            success: false,
+            message: error.response?.data?.message || 'Error making payment'
+        };
+    }
+};
+
+export const confirmPaymentService = async (sessionId: string, token: string): Promise<ApiResponse<void>> => {
+    try {
+        const response: AxiosResponse<ApiResponse<void>> = await axios.post(`${BASE_URL}/confirm`, {
+            sessionId,
+            token
+        });
+        return response.data;
+    } catch (error: any) {
+        return {
+            success: false,
+            message: error.response?.data?.message || 'Error confirming payment'
+        };
+    }
+};
+
+export const checkBalanceService = async (document: string, celular: string): Promise<ApiResponse<{ balance: number }>> => {
+    try {
+        const response: AxiosResponse<ApiResponse<{ balance: number }>> = await axios.get(`${BASE_URL}/balance`, {
+            params: { document, celular }
+        });
+        return response.data;
+    } catch (error: any) {
+        return {
+            success: false,
+            message: error.response?.data?.message || 'Error checking balance'
+        };
+    }
+};
