@@ -1,1 +1,5 @@
 node_modules/
+
+# Excluir carpetas de compilación
+service-client/dist/
+service-db/dist/
