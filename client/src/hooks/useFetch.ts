@@ -4,7 +4,7 @@ interface UseFetchResult<T> {
   data: T | null;
   error: string | null;
   loading: boolean;
-  fetchData: (url: string, body?: any, method?: string) => Promise<void>;
+  fetchData: (url: string, body?: any, method?: string) => Promise<T | undefined>;
 }
 
 export const useFetch = <T>(): UseFetchResult<T> => {
@@ -17,20 +17,27 @@ export const useFetch = <T>(): UseFetchResult<T> => {
     setError(null);
 
     try {
-      const response = await fetch(url, {
+     
+      // Si el método es GET, agrega los parámetros a la URL
+      const finalUrl = method === "GET" && body 
+          ? `${url}?${new URLSearchParams(body).toString()}` 
+          : url;
+
+      const response = await fetch(finalUrl, {
         method,
         headers: {
           "Content-Type": "application/json",
         },
-        body: body ? JSON.stringify(body) : null,
+        body: method !== "GET" && method !== "HEAD" ? JSON.stringify(body) : null,
       });
 
       if (!response.ok) {
         throw new Error(`Error: ${response.status} ${response.statusText}`);
       }
 
-      const result = await response.json();
+      const result: T  = await response.json();
       setData(result);
+      return result; // Devuelve el resultado directamente
     } catch (err: any) {
       setError(err.message || "An error occurred");
     } finally {

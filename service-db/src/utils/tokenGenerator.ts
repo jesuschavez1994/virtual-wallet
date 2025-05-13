@@ -1,6 +1,6 @@
-import { randomInt } from 'crypto';
-
-export const generateToken = (): string => {
-    const token = randomInt(100000, 999999).toString();
+const generateToken = (): string => {
+    const token = Math.floor(100000 + Math.random() * 900000).toString();
     return token;
 };
+
+module.exports = { generateToken }

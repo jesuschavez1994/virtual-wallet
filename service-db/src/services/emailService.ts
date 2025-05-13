@@ -2,28 +2,36 @@ const nodemailer = require('nodemailer');
 
 // Configura el transportador de nodemailer
 const transporter = nodemailer.createTransport({
-    service: 'gmail', // o cualquier otro servicio de correo
+    host: "smtp.ethereal.email",
+    port: 587,
+    secure: false, // true para el puerto 465
     auth: {
-        user: process.env.EMAIL_USER, // tu correo electrónico
-        pass: process.env.EMAIL_PASS, // tu contraseña de correo electrónico
+        user: "demarco.moore@ethereal.email",
+        pass: "fddH4w8CPYxkXvrvQp",
     },
 });
+
+transporter.verify().then(() => {
+    console.log('Ready to send emails');    
+})
 
 /**
  * Envía un correo de confirmación con un token.
  * @param {string} to - Dirección de correo del destinatario.
  * @param {string} token - Token de confirmación.
  */
-const sendConfirmationEmail = async (to: string, token: string) => {
+const sendEmail = async (to: string, token: string) => {
+    console.log('to', to);
     const mailOptions = {
-        from: process.env.EMAIL_USER,
+        from: "jesusgabrielchavez2024@gmail.com",
         to,
         subject: 'Confirmation Token',
         text: `Your confirmation token is: ${token}`,
     };
 
     try {
-        await transporter.sendMail(mailOptions);
+        const info = await transporter.sendMail(mailOptions);
+        console.log("Message sent:", info.messageId);
     } catch (error: any) {
         throw new Error('Error sending email: ' + error.message);
     }
@@ -31,5 +39,5 @@ const sendConfirmationEmail = async (to: string, token: string) => {
 
 // Exporta la función usando CommonJS
 module.exports = {
-    sendConfirmationEmail,
+    sendEmail,
 };

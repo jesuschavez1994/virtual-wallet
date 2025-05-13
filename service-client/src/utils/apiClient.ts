@@ -34,15 +34,16 @@ export const registerClientService = async (
 };
 
 export const loadWalletService = async (
-    document: string, 
+    documento: string, 
     celular: string, 
-    amount: number
+    monto: number
 ): Promise<ApiResponse<void>> => {
+    console.log("loadWalletService", documento, celular, monto);
     try {
-        const response: AxiosResponse<ApiResponse<void>> = await axios.post(`${BASE_URL}/load`, {
-            document,
+        const response: AxiosResponse<ApiResponse<void>> = await axios.post(`${BASE_URL}/wallet/load`, {
+            documento,
             celular,
-            amount
+            monto
         });
         return response.data;
     } catch (error: any) {
@@ -54,15 +55,15 @@ export const loadWalletService = async (
 };
 
 export const makePaymentService = async (
-    document: string, 
+    documento: string, 
     celular: string, 
-    amount: number
+    monto: number
 ): Promise<ApiResponse<{ sessionId: string }>> => {
     try {
-        const response: AxiosResponse<ApiResponse<{ sessionId: string }>> = await axios.post(`${BASE_URL}/pay`, {
-            document,
+        const response: AxiosResponse<ApiResponse<{ sessionId: string }>> = await axios.post(`${BASE_URL}/wallet/pay`, {
+            documento,
             celular,
-            amount
+            monto
         });
         return response.data;
     } catch (error: any) {
@@ -75,7 +76,7 @@ export const makePaymentService = async (
 
 export const confirmPaymentService = async (sessionId: string, token: string): Promise<ApiResponse<void>> => {
     try {
-        const response: AxiosResponse<ApiResponse<void>> = await axios.post(`${BASE_URL}/confirm`, {
+        const response: AxiosResponse<ApiResponse<void>> = await axios.post(`${BASE_URL}/wallet/confirm`, {
             sessionId,
             token
         });
@@ -88,10 +89,10 @@ export const confirmPaymentService = async (sessionId: string, token: string): P
     }
 };
 
-export const checkBalanceService = async (document: string, celular: string): Promise<ApiResponse<{ balance: number }>> => {
+export const checkBalanceService = async (documento: string, celular: string): Promise<ApiResponse<{ balance: number }>> => {
     try {
-        const response: AxiosResponse<ApiResponse<{ balance: number }>> = await axios.get(`${BASE_URL}/balance`, {
-            params: { document, celular }
+        const response: AxiosResponse<ApiResponse<{ balance: number }>> = await axios.get(`${BASE_URL}/wallet/balance`, {
+            params: { documento, celular }
         });
         return response.data;
     } catch (error: any) {

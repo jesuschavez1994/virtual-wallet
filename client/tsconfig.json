@@ -14,9 +14,6 @@
       "dom.iterable",
       "esnext"
     ],
-    "paths": {
-      "@/*": ["src/*"]
-    },
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "noFallthroughCasesInSwitch": true,

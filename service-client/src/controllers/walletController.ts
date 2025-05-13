@@ -10,17 +10,24 @@ const {
 const handleError = require('../utils/handleError');
 
 export const loadWallet = async (req: Request, res: Response): Promise<void> => {
-    const { document, celular, value } = req.body;
+    const { documento, celular, monto } = req.body;
 
-    if (!document || !celular || !value) {
+    console.log("loadWallet", {
+        documento,
+        celular,
+        monto
+    })
+    if (!documento || !celular || !monto) {
         res.status(400).json({ code: 'ERR_MISSING_FIELDS', message: 'All fields are required.' });
         return;
     }
 
+
     try {
-        const response = await loadWalletService(document, celular, value);
-        if (response.success) {
-            res.status(200).json(response.data); // Successful operation
+        const response = await loadWalletService(documento, celular, monto);
+        console.log("loadWallet response", response)
+        if(response.success) {
+            res.status(200).json(response); // Operación exitosa
         }
         else {
             res.status(400).json({
@@ -36,17 +43,17 @@ export const loadWallet = async (req: Request, res: Response): Promise<void> => 
 
 export const pay = async (req: Request, res: Response): Promise<void> => {
 
-    const { document, celular, amount } = req.body;
+    const { documento, celular, monto } = req.body;
 
-    if (!document || !celular || !amount) {
+    if (!documento || !celular || !monto) {
         res.status(400).json({ code: 'ERR_MISSING_FIELDS', message: 'All fields are required.' });
         return;
     }
 
     try {
-        const response = await makePaymentService(document, celular, amount);
+        const response = await makePaymentService(documento, celular, monto);
         if (response.success) {
-            res.status(200).json(response.data); // Successful operation
+            res.status(200).json(response); // Successful operation
         }
         else {
             res.status(400).json({
@@ -84,17 +91,19 @@ export const confirmPayment = async (req: Request, res: Response): Promise<void>
 };
 
 export const checkBalance = async (req: Request, res: Response): Promise<void> => {
-    const { document, celular } = req.body;
+    const { documento, celular } = req.query;
 
-    if (!document || !celular) {
+    console.log("QUERY", req.query);
+
+    if (!documento || !celular) {
         res.status(400).json({ code: 'ERR_MISSING_FIELDS', message: 'Document and celular are required.' });
         return;
     }
 
     try {
-        const response = await checkBalanceService(document, celular);
+        const response = await checkBalanceService(documento, celular);
         if(response.success) {
-            res.status(200).json(response.data); // Successful operation
+            res.status(200).json(response); // Successful operation
         }
         else {
             res.status(400).json({

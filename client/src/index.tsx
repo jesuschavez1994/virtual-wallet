@@ -1,13 +1,13 @@
-// filepath: c:\Users\ASRock\Documents\GitHub\Node\Epayco\virtual-wallet\client\src\index.tsx
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Index from 'pages/Index';
+import { Toaster } from "react-hot-toast";
 import './index.css';
-import App from './App';
-import VirtualWallet from 'components/WalletForm';
 
 ReactDOM.render(
     <React.StrictMode>
-        <VirtualWallet />
+        <Toaster position="top-right" reverseOrder={false} />
+        <Index />
     </React.StrictMode>,
     document.getElementById('root')
 );
