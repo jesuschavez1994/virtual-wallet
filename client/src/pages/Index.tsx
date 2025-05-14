@@ -1,7 +1,5 @@
 
 import { useState } from "react";
-import toast from "react-hot-toast";
-import { useWallet } from "../hooks/useWallet";
 import WalletHeader from "../components/WalletHeader";
 import RegisterForm from "../components/RegisterForm";
 import RechargeForm from "../components/RechargeForm";

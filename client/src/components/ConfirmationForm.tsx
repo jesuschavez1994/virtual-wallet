@@ -38,12 +38,12 @@ const ConfirmationForm = () => {
   const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-   
-      const result = await fetchData("http://localhost:8080/api/wallets/confirm-payment", {
+
+      const result = await fetchData(
+        `${process.env.REACT_APP_API_BASE_URL}/wallets/confirm-payment`, {
         sessionId,
         token
       });
-
 
        if (!result?.success) {
         toast.error(result?.message ?? 'Ocurrió un error inesperado');

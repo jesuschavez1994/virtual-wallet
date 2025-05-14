@@ -45,7 +45,7 @@ const BalanceForm = () => {
     e.preventDefault();
     if (validate()) {
       const result = await fetchData(
-        "http://localhost:8080/api/wallets/balance", 
+        `${process.env.REACT_APP_API_BASE_URL}/wallets/balance`, 
         {documento: documento, celular: phone}, 
         'GET'
       );

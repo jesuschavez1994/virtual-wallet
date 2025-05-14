@@ -43,8 +43,7 @@ const PaymentForm = () => {
   const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-  
-      const result = await fetchData("http://localhost:8080/api/wallets/pay", {
+      const result = await fetchData(`${process.env.REACT_APP_API_BASE_URL}/wallets/pay`, {
         documento: documento,
         monto: monto,
         celular: phone,

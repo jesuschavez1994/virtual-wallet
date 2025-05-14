@@ -12,7 +12,7 @@ import Spinner from "./spinner";
 
 const RegisterForm = () => {
 
-  const { data, error, loading, fetchData } = useFetch<ResultApi>();
+  const { loading, fetchData } = useFetch<ResultApi>();
 
   const [document, setDocument] = useState("");
   const [name, setName] = useState("");
@@ -45,9 +45,7 @@ const RegisterForm = () => {
   const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      //onRegister(document, name, email, phone);
-      // Llamar a la API usando el hook
-      const result = await fetchData("http://localhost:8080/api/users/register", {
+      const result = await fetchData(`${process.env.REACT_APP_API_BASE_URL}/users/register`, {
         documento: document,
         nombres: name,
         email: email,
