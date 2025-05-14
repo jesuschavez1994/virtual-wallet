@@ -1,0 +1,53 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: ./service-db
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081" # Mapea el puerto del contenedor al host
+    environment:
+      - PORT=8081
+      - USER=curso_node
+      - PASS=r6X0VaNbgWCVHKyy
+      - MONGODB_ATLAS=mongodb+srv://curso_node:r6X0VaNbgWCVHKyy@nodecurso.uagpmzs.mongodb.net/NodeCurso
+      - SECRETORPRIVATEKEY=ABC$
+    volumes:
+      - ./service-db:/app
+      - /app/node_modules
+    depends_on:
+      - mongodb
+
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80" # Mapea el puerto del contenedor al host
+    environment:
+      - REACT_APP_API_BASE_URL=http://localhost:8080/api
+    volumes:
+      - ./client:/app
+
+  mongodb:
+    image: mongo:5.0
+    container_name: mongodb
+    ports:
+      - "27017:27017" # Mapea el puerto de MongoDB al host
+    volumes:
+      - mongo-data:/data/db
+
+  service-client:
+    build:
+      context: ./service-client
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+    depends_on:
+      - backend
+
+volumes:
+  mongo-data:

@@ -1,80 +1,53 @@
-# Virtual Wallet Project
 
-This project simulates a virtual wallet system with two REST services: one for direct database access and another that acts as a client-facing API. The system allows users to register, load money into their wallets, make purchases, confirm payments, and check their wallet balances.
+Este README incluye:
+1. Instrucciones claras de instalación
+2. Configuración esencial
+3. Comandos Docker clave
+4. Solución de problemas comunes
 
-## Project Structure
 
-The project is organized into three main directories:
+# Virtual Wallet - Docker Deployment
 
-- **client**: Contains the React application for user interaction.
-- **service-db**: Contains the backend service that interacts directly with the MongoDB database.
-- **service-client**: Acts as a bridge between the client application and the database service.
+![Docker](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
 
-## Features
+Aplicación de billetera virtual con arquitectura de 3 capas utilizando Docker.
 
-1. **User Registration**: Users can register by providing their document, names, email, and cell phone number.
-2. **Load Wallet**: Users can load money into their wallets by providing their document, cell phone number, and the amount to load.
-3. **Make Purchase**: Users can make a purchase, which generates a 6-digit confirmation token sent to their registered email.
-4. **Confirm Payment**: Users can confirm their payment by providing the session ID and the token received via email.
-5. **Check Balance**: Users can check their wallet balance by providing their document and cell phone number.
+## 🚀 Requisitos Previos
 
-## Technologies Used
+- Docker 20.10+
+- Docker Compose 2.0+
+- 2 GB de RAM disponible
+- Puerto 3000, 8080, 8081 y 27017 libres
 
-- **Node.js**: Backend runtime environment.
-- **Express**: Web framework for building RESTful APIs.
-- **MongoDB**: NoSQL database for storing user and wallet information.
-- **TypeScript**: Superset of JavaScript for type safety and better development experience.
-- **React**: Frontend library for building user interfaces.
+## 📥 Instalación
 
-## Installation
+1. **Clonar repositorio**
+```bash
+git clone https://github.com/jesuschavez1994/virtual-wallet.git
+cd virtual-wallet
 
-1. Clone the repository:
-   ```
-   git clone <repository-url>
-   ```
+2. **Iniciar con Docker compose**
 
-2. Navigate to each service directory and install dependencies:
-   ```
-   cd client
-   npm install
+# Construir imágenes y levantar contenedores
+docker-compose up --build
 
-   cd ../service-db
-   npm install
+# Modo detached
+docker-compose up -d
 
-   cd ../service-client
-   npm install
-   ```
+2. **Comando esenciales**
+# Detener todos los servicios
+docker-compose down
 
-3. Set up your MongoDB connection string in the environment variables as specified in the project.
+# Reiniciar servicio específico
+docker-compose restart service-client
 
-## Running the Project
+# Ver logs en tiempo real
+docker-compose logs -f --tail=100
 
-- Start the database service:
-  ```
-  cd service-db
-  npm start
-  ```
+# Eliminar volúmenes persistentes
+docker-compose down -v
 
-- Start the client service:
-  ```
-  cd service-client
-  npm start
-  ```
-
-- Start the client application:
-  ```
-  cd client
-  npm start
-  ```
-
-## API Documentation
-
-Refer to the Postman collection included in the project for detailed API documentation and testing.
-
-## Contribution
-
-Feel free to contribute to this project by submitting issues or pull requests. 
-
-## License
-
-This project is licensed under the MIT License.
+# Reconstruir sin caché
+docker-compose build --no-cache

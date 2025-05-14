@@ -16,6 +16,7 @@ const registerUser = async (req: Request, res: Response) => {
     }
     try {
         const newUser = new User({ documento, nombres, email, celular });
+
         await newUser.save();
         return res.status(201).json({
             code: 'SUCCESS',

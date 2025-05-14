@@ -2,7 +2,7 @@ const axios = require('axios');
 
 import { AxiosResponse } from 'axios';
 
-const BASE_URL = 'http://localhost:8081/api'; // Cambia esto a la URL de tu servicio
+const BASE_URL = 'http://backend:8081/api'; // Cambia esto a la URL de tu servicio
 
 interface ApiResponse<T> {
     success: boolean;
