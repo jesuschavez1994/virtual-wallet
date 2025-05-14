@@ -1,136 +1,161 @@
 {
-  "info": {
-    "_postman_id": "12345678-1234-1234-1234-123456789012",
-    "name": "Virtual Wallet API",
-    "description": "Postman collection for testing the Virtual Wallet API endpoints.",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-  },
-  "item": [
-    {
-      "name": "Register Client",
-      "request": {
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\"document\":\"string\",\"nombres\":\"string\",\"email\":\"string\",\"celular\":\"string\"}"
-        },
-        "url": {
-          "raw": "http://localhost:8080/api/register",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "api",
-            "register"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Load Wallet",
-      "request": {
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\"document\":\"string\",\"celular\":\"string\",\"valor\":number}"
-        },
-        "url": {
-          "raw": "http://localhost:8080/api/load",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "api",
-            "load"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Make Payment",
-      "request": {
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\"document\":\"string\",\"celular\":\"string\",\"amount\":number}"
-        },
-        "url": {
-          "raw": "http://localhost:8080/api/pay",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "api",
-            "pay"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Confirm Payment",
-      "request": {
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\"sessionId\":\"string\",\"token\":\"string\"}"
-        },
-        "url": {
-          "raw": "http://localhost:8080/api/confirm",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "api",
-            "confirm"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Check Balance",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8080/api/balance?document=string&celular=string",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "api",
-            "balance"
-          ],
-          "query": [
-            {
-              "key": "document",
-              "value": "string"
-            },
-            {
-              "key": "celular",
-              "value": "string"
-            }
-          ]
-        }
-      },
-      "response": []
-    }
-  ]
+	"info": {
+		"_postman_id": "3c6559ee-e5be-4473-8cb2-34ded81a635f",
+		"name": "Epayco",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25041198"
+	},
+	"item": [
+		{
+			"name": "Registrarusuario",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"documento\": \"123456788\",\r\n    \"nombres\": \"Juan Peres\",\r\n    \"email\": \"juan.perez2@example.com\",\r\n    \"celular\": \"3301234567\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/users/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener Saldo",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/wallets/balance?documento=24544000&celular=3145698741",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"wallets",
+						"balance"
+					],
+					"query": [
+						{
+							"key": "documento",
+							"value": "24544000"
+						},
+						{
+							"key": "celular",
+							"value": "3145698741"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Pagar",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"documento\":\"24544000\",\"monto\":\"20\",\"celular\":\"3145698741\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/wallets/pay",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"wallets",
+						"pay"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Recargar saldo",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"documento\":\"24544000\",\"celular\":\"3145698741\",\"monto\":90}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/wallets/load-money",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"wallets",
+						"load-money"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Confirmar pago",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"sessionId\":\"1747244409498\",\"token\":\"184527\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/wallets/confirm-payment",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"wallets",
+						"confirm-payment"
+					]
+				}
+			},
+			"response": []
+		}
+	]
 }
