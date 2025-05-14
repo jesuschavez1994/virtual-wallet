@@ -12,20 +12,13 @@ const handleError = require('../utils/handleError');
 export const loadWallet = async (req: Request, res: Response): Promise<void> => {
     const { documento, celular, monto } = req.body;
 
-    console.log("loadWallet", {
-        documento,
-        celular,
-        monto
-    })
     if (!documento || !celular || !monto) {
         res.status(400).json({ code: 'ERR_MISSING_FIELDS', message: 'All fields are required.' });
         return;
     }
 
-
     try {
         const response = await loadWalletService(documento, celular, monto);
-        console.log("loadWallet response", response)
         if(response.success) {
             res.status(200).json(response); // Operación exitosa
         }
@@ -77,7 +70,7 @@ export const confirmPayment = async (req: Request, res: Response): Promise<void>
     try {
         const response = await confirmPaymentService(sessionId, token);
         if (response.success) {
-            res.status(200).json(response.data); // Successful operation
+            res.status(200).json(response); // Successful operation
         }
         else {
             res.status(400).json({
@@ -92,8 +85,6 @@ export const confirmPayment = async (req: Request, res: Response): Promise<void>
 
 export const checkBalance = async (req: Request, res: Response): Promise<void> => {
     const { documento, celular } = req.query;
-
-    console.log("QUERY", req.query);
 
     if (!documento || !celular) {
         res.status(400).json({ code: 'ERR_MISSING_FIELDS', message: 'Document and celular are required.' });

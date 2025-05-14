@@ -47,7 +47,6 @@ const loadWallet = async (req:Request , res:Response) => {
         // Verificar si la billetera existe, si no, crearla
         let wallet = await Wallet.findOne({ userId: user._id })
         if (!wallet) {
-            console.log("CREANDO WALLET")
             wallet = new Wallet({ userId: user._id, balance: 0 });
             await wallet.save();
         }
@@ -55,7 +54,6 @@ const loadWallet = async (req:Request , res:Response) => {
         // Cargar dinero en la billetera
         wallet.balance += monto;
         await wallet.save();
-        console.log("SE GUARDO LA WALLET", wallet);
         return res.status(200).json({ code: 'SUCCESS', message: 'Wallet loaded successfully.', success: true, });
     } catch (error) {
         return res.status(500).json({ code: 'ERR_SERVER', message: 'Failed to load wallet.', success: false, });
@@ -87,8 +85,6 @@ const pay = async (req: Request, res: Response) => {
 
         // Generar un token de 6 dígitos
         const token = generateToken();
-
-        console.log('USER', user);
 
         // Enviar el token al correo electrónico del usuario
         await sendEmail(user.email, `Tu token de confirmación es: ${token}`);
@@ -124,18 +120,75 @@ const pay = async (req: Request, res: Response) => {
 /**
  * Confirma un pago.
  */
-const confirmPayment = async (req:Request , res:Response) => {
+const confirmPayment = async (req: Request, res: Response) => {
     const { sessionId, token } = req.body;
 
     if (!sessionId || !token) {
-        return res.status(400).json({ code: 'ERR_MISSING_FIELDS', message: 'Session ID and token are required.', success: false, });
+        return res.status(400).json({ 
+            code: 'ERR_MISSING_FIELDS', 
+            message: 'Session ID and token are required.', 
+            success: false 
+        });
     }
 
     try {
-        // Aquí iría la lógica para validar el sessionId y token
-        return res.status(200).json({ code: 'SUCCESS', message: 'Payment confirmed successfully.', success: true, });
+        // Buscar la sesión de pago en la base de datos
+        const paymentSession = await PaymentSession.findOne({ sessionId, token });
+        if (!paymentSession) {
+            return res.status(404).json({ 
+                code: 'ERR_SESSION_NOT_FOUND', 
+                message: 'Invalid session ID or token.', 
+                success: false 
+            });
+        }
+        // Verificar si el token ha expirado
+        if (paymentSession.expiresAt < new Date()) {
+            return res.status(400).json({ 
+                code: 'ERR_TOKEN_EXPIRED', 
+                message: 'Token has expired.', 
+                success: false 
+            });
+        }
+        // Verificar si el pago ya fue confirmado
+        if (paymentSession.isConfirmed) {
+            return res.status(400).json({ 
+                code: 'ERR_ALREADY_CONFIRMED', 
+                message: 'Payment has already been confirmed.', 
+                success: false 
+            });
+        }
+        // Descontar el saldo de la billetera
+        const wallet = await Wallet.findOne({ userId: paymentSession.userId });
+        if (!wallet) {
+            return res.status(404).json({ 
+                code: 'ERR_WALLET_NOT_FOUND', 
+                message: 'Wallet not found.', 
+                success: false 
+            });
+        }
+        if (wallet.balance < paymentSession.monto) {
+            return res.status(400).json({ 
+                code: 'ERR_INSUFFICIENT_BALANCE', 
+                message: 'Insufficient balance.', 
+                success: false 
+            });
+        }
+        wallet.balance -= paymentSession.monto;
+        await wallet.save();
+        // Marcar la sesión como confirmada
+        paymentSession.isConfirmed = true;
+        await paymentSession.save();
+        return res.status(200).json({ 
+            code: 'SUCCESS', 
+            message: 'Payment confirmed successfully.', 
+            success: true 
+        });
     } catch (error) {
-        return res.status(500).json({ code: 'ERR_SERVER', message: 'Failed to confirm payment.', success: false, });
+        return res.status(500).json({ 
+            code: 'ERR_SERVER', 
+            message: 'Failed to confirm payment.', 
+            success: false 
+        });
     }
 };
 

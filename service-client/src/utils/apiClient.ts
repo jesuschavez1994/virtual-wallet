@@ -17,7 +17,6 @@ export const registerClientService = async (
     celular: string
 ): Promise<ApiResponse<void>> => {
     try {
-        console.log("LLEGMOS AQUI", `${BASE_URL}/register`);
         const response: AxiosResponse<ApiResponse<void>> = await axios.post(`${BASE_URL}/register`, {
             documento,
             nombres,
@@ -38,7 +37,6 @@ export const loadWalletService = async (
     celular: string, 
     monto: number
 ): Promise<ApiResponse<void>> => {
-    console.log("loadWalletService", documento, celular, monto);
     try {
         const response: AxiosResponse<ApiResponse<void>> = await axios.post(`${BASE_URL}/wallet/load`, {
             documento,

@@ -21,7 +21,6 @@ transporter.verify().then(() => {
  * @param {string} token - Token de confirmación.
  */
 const sendEmail = async (to: string, token: string) => {
-    console.log('to', to);
     const mailOptions = {
         from: "jesusgabrielchavez2024@gmail.com",
         to,
@@ -31,7 +30,6 @@ const sendEmail = async (to: string, token: string) => {
 
     try {
         const info = await transporter.sendMail(mailOptions);
-        console.log("Message sent:", info.messageId);
     } catch (error: any) {
         throw new Error('Error sending email: ' + error.message);
     }

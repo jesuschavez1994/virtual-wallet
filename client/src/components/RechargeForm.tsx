@@ -10,11 +10,7 @@ import { ResultApi } from "models/api-reslt.model";
 import { useForm } from "hooks/useForm";
 import toast from "react-hot-toast";
 
-interface RechargeFormProps {
-  onRecharge: (document: string, phone: string, amount: number) => void;
-}
-
-const RechargeForm = ({ onRecharge }: RechargeFormProps) => {
+const RechargeForm = () => {
 
   const { error, loading, fetchData } = useFetch<ResultApi>();
   

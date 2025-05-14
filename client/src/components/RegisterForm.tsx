@@ -8,12 +8,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../co
 import { validators, getValidationMessage } from "../lib/validators";
 import { useFetch } from "hooks/useFetch";
 import { ResultApi } from "models/api-reslt.model";
+import Spinner from "./spinner";
 
-interface RegisterFormProps {
-  onRegister: (document: string, name: string, email: string, phone: string) => void;
-}
-
-const RegisterForm = ({ onRegister }: RegisterFormProps) => {
+const RegisterForm = () => {
 
   const { data, error, loading, fetchData } = useFetch<ResultApi>();
 
@@ -50,19 +47,17 @@ const RegisterForm = ({ onRegister }: RegisterFormProps) => {
     if (validate()) {
       //onRegister(document, name, email, phone);
       // Llamar a la API usando el hook
-      await fetchData("http://localhost:8080/api/users/register", {
+      const result = await fetchData("http://localhost:8080/api/users/register", {
         documento: document,
         nombres: name,
         email: email,
         celular: phone,
       });
 
-      console.log('DATA', data);
-      console.log('ERROR', error);
        // Manejar la respuesta
-      if (error) {
-        toast.error(error);
-      } else if (data?.success) {
+      if (!result?.success) {
+        toast.error(result?.message ?? 'Ocurrió un error inesperado');
+      } else if (result?.success) {
         toast.success("Cliente registrado exitosamente");
         setDocument("");
         setName("");
@@ -82,66 +77,73 @@ const RegisterForm = ({ onRegister }: RegisterFormProps) => {
         <CardDescription>Ingresa tus datos personales para registrarte</CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="document">Documento *</Label>
-            <Input
-              id="document"
-              type="text"
-              placeholder="Ingresa tu número de documento"
-              value={document}
-              onChange={(e) => setDocument(e.target.value)}
-              className={errors.document ? "border-red-500" : ""}
-            />
-            {errors.document && <p className="text-xs text-red-500">{errors.document}</p>}
+        {
+          loading ? ( // Mostrar el spinner mientras `loading` es true
+          <div className="flex justify-center items-center h-40">
+            <Spinner />
           </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="name">Nombres completos *</Label>
-            <Input
-              id="name"
-              type="text"
-              placeholder="Ingresa tu nombre y apellido"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className={errors.name ? "border-red-500" : ""}
-            />
-            {errors.name && <p className="text-xs text-red-500">{errors.name}</p>}
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="email">Correo electrónico *</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="ejemplo@correo.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className={errors.email ? "border-red-500" : ""}
-            />
-            {errors.email && <p className="text-xs text-red-500">{errors.email}</p>}
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="phone">Número de celular *</Label>
-            <Input
-              id="phone"
-              type="tel"
-              placeholder="3XXXXXXXXX"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              className={errors.phone ? "border-red-500" : ""}
-            />
-            {errors.phone && <p className="text-xs text-red-500">{errors.phone}</p>}
-          </div>
-          
-          <Button 
-            type="submit" 
-            className="w-full bg-wallet-purple hover:bg-wallet-dark-purple"
-          >
-            Registrarse
-          </Button>
-        </form>
+          ) : ( 
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="document">Documento *</Label>
+              <Input
+                id="document"
+                type="text"
+                placeholder="Ingresa tu número de documento"
+                value={document}
+                onChange={(e) => setDocument(e.target.value)}
+                className={errors.document ? "border-red-500" : ""}
+              />
+              {errors.document && <p className="text-xs text-red-500">{errors.document}</p>}
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="name">Nombres completos *</Label>
+              <Input
+                id="name"
+                type="text"
+                placeholder="Ingresa tu nombre y apellido"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className={errors.name ? "border-red-500" : ""}
+              />
+              {errors.name && <p className="text-xs text-red-500">{errors.name}</p>}
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="email">Correo electrónico *</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="ejemplo@correo.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className={errors.email ? "border-red-500" : ""}
+              />
+              {errors.email && <p className="text-xs text-red-500">{errors.email}</p>}
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="phone">Número de celular *</Label>
+              <Input
+                id="phone"
+                type="tel"
+                placeholder="3XXXXXXXXX"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className={errors.phone ? "border-red-500" : ""}
+              />
+              {errors.phone && <p className="text-xs text-red-500">{errors.phone}</p>}
+            </div>
+            
+            <Button 
+              type="submit" 
+              className="w-full bg-wallet-purple hover:bg-wallet-dark-purple"
+            >
+              Registrarse
+            </Button>
+          </form>
+        )}
       </CardContent>
     </Card>
   );

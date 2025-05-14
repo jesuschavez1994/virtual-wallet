@@ -5,12 +5,15 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { validators, getValidationMessage } from "../lib/validators";
+import { ResultApi } from "models/api-reslt.model";
+import { useFetch } from "hooks/useFetch";
+import toast from "react-hot-toast";
 
-interface ConfirmationFormProps {
-  onConfirmPayment: (sessionId: string, token: string) => boolean;
-}
 
-const ConfirmationForm = ({ onConfirmPayment }: ConfirmationFormProps) => {
+const ConfirmationForm = () => {
+
+  const { fetchData } = useFetch<ResultApi>();
+
   const [sessionId, setSessionId] = useState("");
   const [token, setToken] = useState("");
   const [confirmed, setConfirmed] = useState(false);
@@ -32,16 +35,24 @@ const ConfirmationForm = ({ onConfirmPayment }: ConfirmationFormProps) => {
     return !Object.values(newErrors).some(error => error !== "");
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      const success = onConfirmPayment(sessionId, token);
-      if (success) {
+   
+      const result = await fetchData("http://localhost:8080/api/wallets/confirm-payment", {
+        sessionId,
+        token
+      });
+
+
+       if (!result?.success) {
+        toast.error(result?.message ?? 'Ocurrió un error inesperado');
+      } else if (result?.success) {
+         toast.success(result.message);
         setConfirmed(true);
         setSessionId("");
         setToken("");
-        
-        // Reset the confirmed state after a delay
+         // Reset the confirmed state after a delay
         setTimeout(() => {
           setConfirmed(false);
         }, 3000);

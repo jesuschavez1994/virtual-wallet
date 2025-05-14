@@ -4,7 +4,7 @@ interface UseFetchResult<T> {
   data: T | null;
   error: string | null;
   loading: boolean;
-  fetchData: (url: string, body?: any, method?: string) => Promise<T | undefined>;
+  fetchData: (url: string, body?: any, method?: string) => Promise<T | { success: boolean; message: string }>;
 }
 
 export const useFetch = <T>(): UseFetchResult<T> => {
@@ -40,6 +40,7 @@ export const useFetch = <T>(): UseFetchResult<T> => {
       return result; // Devuelve el resultado directamente
     } catch (err: any) {
       setError(err.message || "An error occurred");
+    return { success: false, message: err.message || "An error occurred" };
     } finally {
       setLoading(false);
     }

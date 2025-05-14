@@ -15,8 +15,6 @@ type TabChildProps = {
 export const Tabs: React.FC<TabsProps> = ({ defaultValue, className, children }) => {
     const [activeTab, setActiveTab] = useState(defaultValue);
   
-    console.log("Current activeTab:", activeTab); // Verificar el estado actual
-  
     return (
       <div className={clsx("tabs", className)}>
         {React.Children.map(children, (child) => {
@@ -42,8 +40,6 @@ export const TabsTrigger: React.FC<{
   }> = ({ value, activeTab, setActiveTab, className, children }) => {
     const isActive = activeTab === value;
   
-    console.log("TabsTrigger props:", { value, activeTab, isActive }); // Depurar las props
-  
     return (
       <button
         className={clsx(
@@ -52,7 +48,6 @@ export const TabsTrigger: React.FC<{
           className
         )}
         onClick={() => {
-          console.log("Changing tab to:", value);
           setActiveTab?.(value); // Actualizar el estado
         }}
       >
@@ -67,6 +62,5 @@ export const TabsContent: React.FC<{
     className?: string;
   }> = ({ value, activeTab, className, children }) => {
     const isActive = activeTab === value;
-    console.log('isActive', isActive)
     return isActive ? <div className={clsx("mt-4", className)}>{children}</div> : null;
   };
